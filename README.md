@@ -5,6 +5,7 @@
 - MathJax 实时 SVG 预览
 - 常用数学符号点击插入
 - LaTeX 命令自动提示和 `Ctrl + Space` 补全
+- PowerPoint 原生公式一键复制，粘贴后仍可编辑
 - 3 倍分辨率 PNG 导出
 - PowerPoint 可直接插入的 SVG 矢量公式导出
 
@@ -21,4 +22,6 @@ npm start
 
 ## PowerPoint 使用
 
-点击“保存为 PPT 公式”生成 `.svg` 文件，然后在 PowerPoint 中选择“插入 > 图片”或直接拖入幻灯片。SVG 可以无损缩放；在新版 PowerPoint 中还可以转换为形状后进一步编辑。
+点击“复制 PPT 公式”，然后直接在 PowerPoint 中粘贴。应用会写入 Office 识别的 `MathML` 与 `MathML Presentation` 剪贴板格式，PowerPoint 会将其转换为原生可编辑公式，而不是普通字符或图片。
+
+点击“保存为 SVG”生成 `.svg` 文件，然后在 PowerPoint 中选择“插入 > 图片”或直接拖入幻灯片。SVG 可以无损缩放；在新版 PowerPoint 中还可以转换为形状后进一步编辑。

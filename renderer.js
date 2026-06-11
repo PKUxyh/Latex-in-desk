@@ -246,6 +246,73 @@ function createExportSvg(background = false, scale = 1) {
   return { markup: new XMLSerializer().serializeToString(root), width, height };
 }
 
+function getOfficeMathML() {
+  const math = preview.querySelector("mjx-assistive-mml math");
+  if (!math) {
+    throw new Error("请先输入一个可以渲染的公式。");
+  }
+
+  const mathmlNamespace = "http://www.w3.org/1998/Math/MathML";
+  const officeMathNamespace = "http://schemas.openxmlformats.org/officeDocument/2006/math";
+  const xmlNamespace = "http://www.w3.org/2000/xmlns/";
+  const documentNode = document.implementation.createDocument(
+    mathmlNamespace,
+    "mml:math",
+    null
+  );
+  const root = documentNode.documentElement;
+  root.setAttributeNS(xmlNamespace, "xmlns:m", officeMathNamespace);
+
+  for (const attribute of math.attributes) {
+    if (attribute.name !== "xmlns") {
+      root.setAttribute(attribute.name, attribute.value);
+    }
+  }
+
+  function copyNode(source, targetDocument) {
+    if (source.nodeType === Node.TEXT_NODE) {
+      return targetDocument.createTextNode(source.nodeValue);
+    }
+
+    if (source.nodeType !== Node.ELEMENT_NODE) return null;
+
+    const target = targetDocument.createElementNS(
+      mathmlNamespace,
+      `mml:${source.localName}`
+    );
+    for (const attribute of source.attributes) {
+      if (!attribute.name.startsWith("xmlns")) {
+        target.setAttribute(attribute.name, attribute.value);
+      }
+    }
+    for (const child of source.childNodes) {
+      const copiedChild = copyNode(child, targetDocument);
+      if (copiedChild) target.append(copiedChild);
+    }
+    return target;
+  }
+
+  for (const child of math.childNodes) {
+    const copiedChild = copyNode(child, documentNode);
+    if (copiedChild) root.append(copiedChild);
+  }
+
+  return `<?xml version="1.0"?>\r\n${new XMLSerializer().serializeToString(documentNode)}\r\n`;
+}
+
+async function copyOfficeEquation() {
+  try {
+    if (!window.desktopApi?.copyOfficeEquation) {
+      throw new Error("请通过 Electron 桌面应用使用原生公式复制功能。");
+    }
+
+    await window.desktopApi.copyOfficeEquation(getOfficeMathML());
+    showToast("PPT 原生公式已复制，可直接粘贴并编辑");
+  } catch (error) {
+    showToast(error.message || "PPT 公式复制失败");
+  }
+}
+
 async function exportSvg() {
   try {
     const { markup } = createExportSvg(false, 1);
@@ -308,6 +375,7 @@ editor.on("cursorActivity", updateCursorPosition);
 
 document.getElementById("export-png").addEventListener("click", exportPng);
 document.getElementById("export-svg").addEventListener("click", exportSvg);
+document.getElementById("copy-office-equation").addEventListener("click", copyOfficeEquation);
 
 renderSymbolLibrary();
 updateCursorPosition();
