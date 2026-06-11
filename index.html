@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LaTeX Formula Desk</title>
+    <link rel="stylesheet" href="node_modules/codemirror/lib/codemirror.css" />
+    <link rel="stylesheet" href="node_modules/codemirror/addon/hint/show-hint.css" />
+    <link rel="stylesheet" href="styles.css?v=2" />
+    <script>
+      window.MathJax = {
+        tex: {
+          packages: { "[+]": ["ams", "color", "boldsymbol"] },
+          inlineMath: [["$", "$"], ["\\(", "\\)"]]
+        },
+        svg: { fontCache: "local" },
+        startup: { typeset: false }
+      };
+    </script>
+    <script src="node_modules/mathjax/es5/tex-svg-full.js"></script>
+    <script src="node_modules/codemirror/lib/codemirror.js"></script>
+    <script src="node_modules/codemirror/mode/stex/stex.js"></script>
+    <script src="node_modules/codemirror/addon/hint/show-hint.js"></script>
+    <script src="renderer.js" defer></script>
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-mark">Σ</div>
+        <div>
+          <h1>LaTeX Formula Desk</h1>
+          <p>本地公式编辑与演示文稿导出</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="button button-secondary" id="export-png" type="button">
+          <span>保存为 PNG</span>
+          <small>高清图片</small>
+        </button>
+        <button class="button button-primary" id="export-svg" type="button">
+          <span>保存为 PPT 公式</span>
+          <small>SVG 矢量格式</small>
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="editor-column" aria-label="LaTeX 编辑区">
+        <div class="panel editor-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">SOURCE</span>
+              <h2>LaTeX 代码</h2>
+            </div>
+            <div class="shortcut">Ctrl + Space 补全</div>
+          </div>
+          <textarea id="latex-source" aria-label="LaTeX 代码">\begin{aligned}
+E &= mc^2 \\
+e^{i\pi} + 1 &= 0
+\end{aligned}</textarea>
+          <div class="editor-footer">
+            <span id="cursor-position">行 1，列 1</span>
+            <span>输入 <code>\</code> 自动显示命令提示</span>
+          </div>
+        </div>
+
+        <div class="panel symbol-panel">
+          <div class="panel-heading symbol-heading">
+            <div>
+              <span class="eyebrow">LIBRARY</span>
+              <h2>常用数学符号</h2>
+            </div>
+            <div class="category-tabs" id="category-tabs" role="tablist"></div>
+          </div>
+          <div class="symbol-grid" id="symbol-grid"></div>
+        </div>
+      </section>
+
+      <section class="panel preview-panel" aria-label="公式预览区">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">PREVIEW</span>
+            <h2>实时预览</h2>
+          </div>
+          <div class="render-state" id="render-state"><i></i> 已同步</div>
+        </div>
+        <div class="preview-stage" id="preview-stage">
+          <div id="formula-preview" aria-live="polite"></div>
+          <div class="empty-state" id="empty-state" hidden>
+            <strong>等待公式</strong>
+            <span>在左侧输入 LaTeX 代码</span>
+          </div>
+        </div>
+        <div class="preview-note">
+          <span>PNG 默认以 3× 分辨率导出</span>
+          <span>SVG 可直接拖入 PowerPoint 并无损缩放</span>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status"></div>
+  </body>
+</html>
