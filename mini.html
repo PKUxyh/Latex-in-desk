@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LaTeX 迷你输入</title>
+    <link rel="stylesheet" href="mini.css" />
+    <script>
+      window.MathJax = {
+        tex: { packages: { "[+]": ["ams", "color", "boldsymbol"] } },
+        svg: { fontCache: "local" },
+        startup: { typeset: false }
+      };
+    </script>
+    <script src="node_modules/mathjax/es5/tex-svg-full.js"></script>
+    <script src="latex-completions.js"></script>
+    <script src="office-mathml.js"></script>
+    <script src="mini.js" defer></script>
+  </head>
+  <body>
+    <main class="mini-shell">
+      <div class="drag-handle" aria-label="拖动窗口"><span></span><span></span><span></span></div>
+      <div class="input-section">
+        <label class="input-wrap">
+          <span class="prompt">LaTeX</span>
+          <input id="mini-source" type="text" autocomplete="off" spellcheck="false"
+            placeholder="输入公式，按 Enter 复制为 PPT 原生公式" />
+        </label>
+        <div class="suggestions" id="mini-suggestions" role="listbox" hidden></div>
+      </div>
+      <section class="preview-wrap" aria-label="实时公式预览">
+        <div id="mini-preview"></div>
+        <span id="mini-placeholder">实时预览</span>
+      </section>
+      <div class="mini-status" id="mini-status">Enter 复制</div>
+      <button class="close-button" id="close-mini" type="button" title="隐藏迷你窗口 (Esc)">×</button>
+    </main>
+  </body>
+</html>

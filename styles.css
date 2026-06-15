@@ -83,7 +83,11 @@ button {
 
 .header-actions {
   display: flex;
-  gap: 12px;
+  gap: 9px;
+}
+
+.header-actions .button {
+  min-width: 132px;
 }
 
 .button {

@@ -21,6 +21,7 @@
     <script src="node_modules/codemirror/lib/codemirror.js"></script>
     <script src="node_modules/codemirror/mode/stex/stex.js"></script>
     <script src="node_modules/codemirror/addon/hint/show-hint.js"></script>
+    <script src="office-mathml.js"></script>
     <script src="renderer.js" defer></script>
   </head>
   <body>
@@ -33,6 +34,10 @@
         </div>
       </div>
       <div class="header-actions">
+        <button class="button button-secondary" id="open-mini-window" type="button">
+          <span>迷你输入窗</span>
+          <small>始终置顶 · Enter 复制</small>
+        </button>
         <button class="button button-secondary" id="copy-office-equation" type="button">
           <span>复制 PPT 公式</span>
           <small>原生可编辑格式</small>

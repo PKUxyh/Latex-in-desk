@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "preview": "node serve.js",
-    "check": "node --check main.js && node --check preload.js && node --check renderer.js && node --check serve.js"
+    "check": "node --check main.js && node --check preload.js && node --check renderer.js && node --check mini.js && node --check latex-completions.js && node --check office-mathml.js && node --check serve.js"
   },
   "dependencies": {
     "codemirror": "5.65.16",

@@ -1,0 +1,221 @@
+:root {
+  color-scheme: light;
+  --ink: #20221f;
+  --muted: #8a8b83;
+  --line: #d8d4c9;
+  --accent: #285e55;
+  --soft: #f4f7f5;
+  --error: #a6433a;
+}
+
+* { box-sizing: border-box; }
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  color: var(--ink);
+  background: #fffdf8;
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+
+.mini-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 12px 12px 12px 8px;
+  display: grid;
+  grid-template-columns: 20px minmax(280px, 1.35fr) minmax(210px, 0.85fr) 76px 30px;
+  align-items: start;
+  gap: 9px;
+  border: 1px solid rgba(40, 94, 85, 0.28);
+  background: #fffdf8;
+  box-shadow: inset 0 3px 0 var(--accent);
+}
+
+.drag-handle {
+  height: 86px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: move;
+  -webkit-app-region: drag;
+}
+
+.drag-handle span {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #a5aaa5;
+}
+
+.input-wrap,
+.preview-wrap {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.input-section {
+  position: relative;
+  min-width: 0;
+  height: 86px;
+  z-index: 10;
+}
+
+.input-wrap {
+  width: 100%;
+  height: 86px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+}
+
+.prompt {
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+#mini-source {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  color: #252925;
+  background: transparent;
+  font: 14px/1.4 "Cascadia Code", Consolas, monospace;
+  -webkit-app-region: no-drag;
+}
+
+#mini-source::placeholder { color: #aaa9a2; }
+
+.preview-wrap {
+  height: 86px;
+  position: relative;
+  padding: 7px 12px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: var(--soft);
+}
+
+#mini-preview {
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  color: #64716c;
+  opacity: 0.66;
+  font-size: 16px;
+}
+
+#mini-preview mjx-container { margin: 0 !important; }
+#mini-preview mjx-assistive-mml {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+}
+#mini-preview svg {
+  max-width: 100%;
+  max-height: 58px;
+}
+
+#mini-placeholder {
+  position: absolute;
+  color: #aaa9a2;
+  font-size: 11px;
+}
+
+.mini-status {
+  height: 86px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.mini-status.valid { color: var(--accent); }
+.mini-status.error { color: var(--error); }
+
+.close-button {
+  height: 86px;
+  border: 0;
+  border-radius: 8px;
+  color: #85877f;
+  background: transparent;
+  cursor: pointer;
+  font: 22px/1 "Segoe UI", sans-serif;
+  -webkit-app-region: no-drag;
+}
+
+.close-button:hover {
+  color: #fff;
+  background: var(--error);
+}
+
+.suggestions {
+  position: absolute;
+  top: 94px;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid #d6d9d5;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(30, 38, 34, 0.16);
+  -webkit-app-region: no-drag;
+}
+
+.suggestion-item {
+  width: 100%;
+  height: 36px;
+  padding: 0 11px;
+  border: 0;
+  display: grid;
+  grid-template-columns: 20px minmax(80px, auto) 1fr;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+}
+
+.suggestion-item + .suggestion-item {
+  border-top: 1px solid #efefeb;
+}
+
+.suggestion-item:hover,
+.suggestion-item.selected {
+  background: #e8f1ed;
+}
+
+.suggestion-icon {
+  color: #7f8d87;
+  font: 16px/1 "Cambria Math", serif;
+}
+
+.suggestion-command {
+  color: #214d45;
+  font: 600 12px/1.2 "Cascadia Code", Consolas, monospace;
+}
+
+.suggestion-template {
+  overflow: hidden;
+  color: #969a94;
+  font: 11px/1.2 "Cascadia Code", Consolas, monospace;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

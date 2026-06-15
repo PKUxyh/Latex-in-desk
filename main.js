@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog, ipcMain } = require("electron");
+const { app, BrowserWindow, dialog, ipcMain, screen } = require("electron");
 const { spawn } = require("node:child_process");
 const fsSync = require("node:fs");
 const fs = require("node:fs/promises");
@@ -17,8 +17,12 @@ app.setPath("userData", userDataPath);
 app.setPath("sessionData", sessionDataPath);
 app.commandLine.appendSwitch("disk-cache-dir", cachePath);
 
+let mainWindow;
+let miniWindow;
+let pendingMiniSource = "";
+
 function createWindow() {
-  const window = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1360,
     height: 860,
     minWidth: 980,
@@ -34,7 +38,60 @@ function createWindow() {
     }
   });
 
-  window.loadFile("index.html");
+  mainWindow.loadFile("index.html");
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+    if (miniWindow && !miniWindow.isDestroyed()) miniWindow.destroy();
+  });
+}
+
+function createMiniWindow(source = "") {
+  if (miniWindow && !miniWindow.isDestroyed()) {
+    miniWindow.show();
+    miniWindow.focus();
+    return;
+  }
+
+  pendingMiniSource = typeof source === "string" ? source : "";
+
+  const { workArea } = screen.getPrimaryDisplay();
+  const width = Math.min(920, workArea.width - 40);
+
+  miniWindow = new BrowserWindow({
+    width,
+    height: 112,
+    minWidth: 560,
+    minHeight: 112,
+    maxHeight: 240,
+    x: workArea.x + Math.round((workArea.width - width) / 2),
+    y: workArea.y + 18,
+    frame: false,
+    resizable: true,
+    alwaysOnTop: true,
+    skipTaskbar: false,
+    show: false,
+    backgroundColor: "#fffdf8",
+    title: "LaTeX 迷你输入",
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: true
+    }
+  });
+
+  miniWindow.setAlwaysOnTop(true, "floating");
+  miniWindow.loadFile("mini.html");
+  miniWindow.once("ready-to-show", () => {
+    miniWindow.show();
+    miniWindow.focus();
+  });
+  miniWindow.webContents.on("did-finish-load", () => {
+    miniWindow.webContents.send("mini-source", pendingMiniSource);
+  });
+  miniWindow.on("closed", () => {
+    miniWindow = null;
+  });
 }
 
 ipcMain.handle("save-export", async (_event, payload) => {
@@ -72,6 +129,24 @@ ipcMain.handle("copy-office-equation", async (_event, mathml) => {
 
   await copyOfficeEquation(mathml);
   return { copied: true };
+});
+
+ipcMain.handle("open-mini-window", (_event, source) => {
+  createMiniWindow(source);
+  return { opened: true };
+});
+
+ipcMain.handle("hide-mini-window", () => {
+  if (miniWindow && !miniWindow.isDestroyed()) miniWindow.hide();
+  return { hidden: true };
+});
+
+ipcMain.handle("set-mini-suggestions-open", (_event, isOpen) => {
+  if (miniWindow && !miniWindow.isDestroyed()) {
+    const [width] = miniWindow.getSize();
+    miniWindow.setSize(width, isOpen ? 224 : 112, true);
+  }
+  return { resized: true };
 });
 
 function copyOfficeEquation(mathml) {
