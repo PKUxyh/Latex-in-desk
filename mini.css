@@ -27,7 +27,7 @@ body {
   height: 100%;
   padding: 12px 12px 12px 8px;
   display: grid;
-  grid-template-columns: 20px minmax(280px, 1.35fr) minmax(210px, 0.85fr) 76px 30px;
+  grid-template-columns: 20px minmax(280px, 1.35fr) minmax(210px, 0.85fr) 78px 30px;
   align-items: start;
   gap: 9px;
   border: 1px solid rgba(40, 94, 85, 0.28);
@@ -137,10 +137,25 @@ body {
   font-size: 11px;
 }
 
-.mini-status {
+.mini-controls {
   height: 86px;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+}
+
+#mini-font-size {
+  width: 100%;
+  border: 1px solid #d6d9d5;
+  border-radius: 8px;
+  color: var(--ink);
+  background: #fff;
+  font: 11px/1.2 "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+
+.mini-status {
+  text-align: center;
   color: var(--muted);
   font-size: 10px;
   white-space: nowrap;

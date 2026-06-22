@@ -84,6 +84,7 @@ button {
 .header-actions {
   display: flex;
   gap: 9px;
+  align-items: center;
 }
 
 .header-actions .button {
@@ -138,6 +139,29 @@ button {
   color: var(--ink);
   border-color: var(--line);
   background: #fff;
+}
+
+.font-size-control {
+  width: 82px;
+  height: 58px;
+  padding: 8px 9px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--muted);
+  background: #fff;
+  font-size: 10px;
+}
+
+.font-size-control select {
+  margin-top: 5px;
+  border: 0;
+  outline: 0;
+  color: var(--ink);
+  background: transparent;
+  font: 650 13px/1 "Segoe UI", "Microsoft YaHei", sans-serif;
 }
 
 .workspace {

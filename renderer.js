@@ -50,6 +50,8 @@ const cursorPosition = document.getElementById("cursor-position");
 const tabs = document.getElementById("category-tabs");
 const symbolGrid = document.getElementById("symbol-grid");
 const toast = document.getElementById("toast");
+const fontSizeSelect = document.getElementById("font-size");
+const fontSizeStorageKey = "latexFormulaDesk.fontSizePt";
 
 const editor = CodeMirror.fromTextArea(source, {
   mode: "stex",
@@ -251,7 +253,17 @@ function getOfficeMathML() {
   if (!math) {
     throw new Error("请先输入一个可以渲染的公式。");
   }
-  return window.officeMath.createOfficeMathML(math);
+  return window.officeMath.createOfficeMathML(math, { fontSizePt: getFontSizePt() });
+}
+
+function getFontSizePt() {
+  return fontSizeSelect?.value || localStorage.getItem(fontSizeStorageKey) || "18";
+}
+
+function setFontSizePt(value) {
+  if (!fontSizeSelect) return;
+  fontSizeSelect.value = value;
+  localStorage.setItem(fontSizeStorageKey, value);
 }
 
 async function copyOfficeEquation() {
@@ -337,7 +349,14 @@ document.getElementById("open-mini-window").addEventListener("click", () => {
   }
   window.desktopApi.openMiniWindow(editor.getValue());
 });
+fontSizeSelect?.addEventListener("change", () => setFontSizePt(fontSizeSelect.value));
+window.addEventListener("storage", (event) => {
+  if (event.key === fontSizeStorageKey && event.newValue && fontSizeSelect) {
+    fontSizeSelect.value = event.newValue;
+  }
+});
 
 renderSymbolLibrary();
 updateCursorPosition();
+setFontSizePt(localStorage.getItem(fontSizeStorageKey) || "18");
 MathJax.startup.promise.then(renderFormula).catch((error) => showToast(error.message));

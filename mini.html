@@ -14,7 +14,7 @@
     </script>
     <script src="node_modules/mathjax/es5/tex-svg-full.js"></script>
     <script src="latex-completions.js"></script>
-    <script src="office-mathml.js"></script>
+    <script src="office-mathml.js?v=3"></script>
     <script src="mini.js" defer></script>
   </head>
   <body>
@@ -32,7 +32,22 @@
         <div id="mini-preview"></div>
         <span id="mini-placeholder">实时预览</span>
       </section>
-      <div class="mini-status" id="mini-status">Enter 复制</div>
+      <div class="mini-controls">
+        <select id="mini-font-size" aria-label="PPT 公式字体大小">
+          <option value="12">12 pt</option>
+          <option value="14">14 pt</option>
+          <option value="16">16 pt</option>
+          <option value="18" selected>18 pt</option>
+          <option value="20">20 pt</option>
+          <option value="24">24 pt</option>
+          <option value="28">28 pt</option>
+          <option value="32">32 pt</option>
+          <option value="36">36 pt</option>
+          <option value="44">44 pt</option>
+          <option value="54">54 pt</option>
+        </select>
+        <div class="mini-status" id="mini-status">Enter 复制</div>
+      </div>
       <button class="close-button" id="close-mini" type="button" title="隐藏迷你窗口 (Esc)">×</button>
     </main>
   </body>

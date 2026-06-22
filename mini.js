@@ -3,6 +3,8 @@ const preview = document.getElementById("mini-preview");
 const placeholder = document.getElementById("mini-placeholder");
 const status = document.getElementById("mini-status");
 const suggestions = document.getElementById("mini-suggestions");
+const fontSizeSelect = document.getElementById("mini-font-size");
+const fontSizeStorageKey = "latexFormulaDesk.fontSizePt";
 
 let renderTimer;
 let renderSequence = 0;
@@ -15,6 +17,16 @@ let suggestionsOpen = false;
 function setStatus(message, state = "") {
   status.textContent = message;
   status.className = `mini-status${state ? ` ${state}` : ""}`;
+}
+
+function getFontSizePt() {
+  return fontSizeSelect?.value || localStorage.getItem(fontSizeStorageKey) || "18";
+}
+
+function setFontSizePt(value) {
+  if (!fontSizeSelect) return;
+  fontSizeSelect.value = value;
+  localStorage.setItem(fontSizeStorageKey, value);
 }
 
 async function renderFormula() {
@@ -139,7 +151,7 @@ async function copyFormula() {
 
   try {
     const math = preview.querySelector("mjx-assistive-mml math");
-    const mathml = window.officeMath.createOfficeMathML(math);
+    const mathml = window.officeMath.createOfficeMathML(math, { fontSizePt: getFontSizePt() });
     if (!window.desktopApi?.copyOfficeEquation) {
       throw new Error("Desktop API unavailable");
     }
@@ -184,6 +196,12 @@ document.getElementById("close-mini").addEventListener("click", () => {
   setSuggestionsOpen(false);
   window.desktopApi?.hideMiniWindow();
 });
+fontSizeSelect?.addEventListener("change", () => setFontSizePt(fontSizeSelect.value));
+window.addEventListener("storage", (event) => {
+  if (event.key === fontSizeStorageKey && event.newValue && fontSizeSelect) {
+    fontSizeSelect.value = event.newValue;
+  }
+});
 
 function loadSource(value) {
   setSuggestionsOpen(false);
@@ -199,6 +217,7 @@ if (window.desktopApi?.onMiniSource) {
 }
 
 MathJax.startup.promise.then(() => {
+  setFontSizePt(localStorage.getItem(fontSizeStorageKey) || "18");
   source.focus();
   if (!window.desktopApi?.onMiniSource) loadSource("\\frac{a}{b} + \\sqrt{x^2 + y^2}");
   else renderFormula();
